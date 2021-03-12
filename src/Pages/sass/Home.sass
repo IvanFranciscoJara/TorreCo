@@ -1,119 +1,102 @@
 @import  '../../GlobalFiles/GlobalVars.sass'
 .ContainerJobSearch
     .ModalFilters
-        position: fixed
-        top: 5vh
-        left: 5vw
-        height: 0vh
-        width: 90vw
-        overflow: hidden
-        transition: .5s ease
-        border: 0px solid $white
-        background: $white
-        overflow-y: auto
-        z-index: 99
-        &.show
-            height: 90vh
-            border: 1px solid $gray-500
-        .Container
-            padding: 15px
-            position: relative
-            .MF
-                &__Close
-                    position: absolute
-                    top: 0
-                    right: 0
-                    height: 50px
-                    width: 50px
-                    display: flex
-                    justify-content: center
-                    align-items: center
+        .MF
+            &__Close
+                position: absolute
+                top: 0
+                right: 0
+                height: 50px
+                width: 50px
+                display: flex
+                justify-content: center
+                align-items: center
+                svg
+                    height: 80%
+                    width: 80%
+                    color: $purple
+                &:hover
                     svg
-                        height: 80%
-                        width: 80%
-                        color: $purple
-                    &:hover
-                        svg
-                            color: $gray-700
-                &__CustomFilters
+                        color: $gray-700
+            &__CustomFilters
+                display: flex
+                align-items: center
+                padding: 0 10px
+                margin-bottom: 10px
+                .title
+                    color: $purple
+                    margin-right: 10px
+                    font-weight: bold
+                .item
                     display: flex
-                    align-items: center
-                    padding: 0 10px
-                    margin-bottom: 10px
-                    .title
+                    margin-right: 15px
+                    &_text,
+                    &_delete
+                        border: 1px solid $purple
                         color: $purple
-                        margin-right: 10px
-                        font-weight: bold
-                    .item
+                        margin: 3px 1px
+                        transition: .2s ease
+                        &:hover
+                            cursor: pointer
+                            background: $purple
+                            color: $white
+                            border: 1px solid $white
+                            svg
+                                fill: $white
+                    &_text
+                        padding: 5px 10px
+                    &_delete
                         display: flex
-                        margin-right: 15px
-                        &_text,
-                        &_delete
-                            border: 1px solid $purple
-                            color: $purple
-                            margin: 3px 1px
-                            transition: .2s ease
+                        justify-content: center
+                        align-items: center
+                        svg
+                            margin: 0 5px
+                            width: 17px
+                            height: 17px
+                            fill: $purple
+            &__AllFilters
+                display: flex
+                align-items: flex-start
+                @media screen and (max-width: 800px)
+                    flex-direction: column
+                .filter
+                    border: 1px solid $gray-500
+                    border-radius: 10px
+                    width: 25%
+                    margin: 5px
+                    overflow: hidden
+                    position: relative
+                    @media screen and  (max-width: 800px)
+                        width: 100%
+                    .filter_title
+                        font-weight: bold
+                        color: $purple
+                        padding: 8px
+                        font-size: 17px
+                        position: absolute
+                        top: 0
+                        background: $white
+                        height: 30px
+                    .Content
+                        margin-top: 30px
+                        padding: 5px
+                        max-height: 300px
+                        overflow-x: hidden
+                        overflow-y: auto
+                        @include scrollbars(10px, $gray-400, $gray-200)
+                        .filter_item
+                            padding: 5px
+                            display: flex
+                            align-items: center
+                            &_checkbox
+                                padding: 3px
+                            &_text
+                                padding: 3px
                             &:hover
                                 cursor: pointer
-                                background: $purple
-                                color: $white
-                                border: 1px solid $white
-                                svg
-                                    fill: $white
-                        &_text
-                            padding: 5px 10px
-                        &_delete
-                            display: flex
-                            justify-content: center
-                            align-items: center
-                            svg
-                                margin: 0 5px
-                                width: 17px
-                                height: 17px
-                                fill: $purple
-                &__AllFilters
-                    display: flex
-                    align-items: flex-start
-                    @media screen and (max-width: 800px)
-                        flex-direction: column
-                    .filter
-                        border: 1px solid $gray-500
-                        border-radius: 10px
-                        width: 25%
-                        margin: 5px
-                        overflow: hidden
-                        position: relative
-                        @media screen and  (max-width: 800px)
-                            width: 100%
-                        .filter_title
-                            font-weight: bold
-                            color: $purple
-                            padding: 8px
-                            font-size: 17px
-                            position: absolute
-                            top: 0
-                            background: $white
-                            height: 30px
-                        .Content
-                            margin-top: 30px
-                            padding: 5px
-                            max-height: 300px
-                            overflow-x: hidden
-                            overflow-y: auto
-                            @include scrollbars(10px, $gray-400, $gray-200)
-                            .filter_item
-                                padding: 5px
-                                display: flex
-                                align-items: center
-                                &_checkbox
-                                    padding: 3px
-                                &_text
-                                    padding: 3px
-                                &:hover
-                                    cursor: pointer
-                &__Footer
-                    display: flex
-                    justify-content: flex-end
+            &__Footer
+                display: flex
+                justify-content: flex-end
     .Filters
         padding: 5px 15px
         border-bottom: 1px solid $gray-300

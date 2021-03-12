@@ -1,0 +1,37 @@
+@import '../../GlobalFiles/GlobalVars'
+.ContainerModal
+    position: fixed
+    top: 5vh
+    left: 5vw
+    height: 0vh
+    width: 90vw
+    overflow: hidden
+    transition: .5s ease
+    border: 0px solid $white
+    background: $white
+    overflow-y: auto
+    z-index: 99
+    &.show
+        height: 90vh
+        border: 1px solid $gray-500
+    .Container
+        padding: 15px
+
+        .MF
+            &__Close
+                position: absolute
+                top: 0
+                right: 0
+                height: 50px
+                width: 50px
+                display: flex
+                justify-content: center
+                align-items: center
+                svg
+                    height: 80%
+                    width: 80%
+                    color: $purple
+                &:hover
+                    cursor: pointer
+                    svg
+                        color: $gray-700

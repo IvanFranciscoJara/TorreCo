@@ -11,10 +11,13 @@ import { useHistory } from 'react-router-dom'
 import { produce } from 'immer'
 import CheckBox from '../Components/CheckBox'
 import Filter from '../Components/Filter'
+import Modal from '../Components/Modal'
 import './sass/Home.sass'
 import { IconEquis, IconDelete } from '../GlobalFiles/Icons'
 import JobDetail from './JobDetail'
 import JobList from './JobList'
+import { classicNameResolver } from 'typescript'
+
 const Home = () => {
   const dispatch = useDispatch()
   const StoreCustomFilters = useSelector((state: RootState) => state.customFilters)
@@ -177,13 +180,10 @@ const Home = () => {
   }
   return (
     <div className="ContainerJobSearch">
-      <div className={`ModalFilters ${filtersOpen ? 'show' : 'hide'}`}>
-        <div className="Container">
+      <Modal open={filtersOpen} handleClose={setFiltersOpen}>
+        <div className="ModalFilters">
           <div className="MF__Title">
             <h3>Filters</h3>
-          </div>
-          <div className="MF__Close" onClick={() => setFiltersOpen(!filtersOpen)}>
-            <IconEquis />
           </div>
           {StoreCustomFilters.length > 0 && (
             <div className="MF__CustomFilters">
@@ -235,7 +235,7 @@ const Home = () => {
             </button>
           </div>
         </div>
-      </div>
+      </Modal>
       <section className="Filters">
         <div className="Filters__Text">
           <input

@@ -1,5 +1,7 @@
 import React from 'react'
 import './sass/JobDetail.sass'
+import { createBreakpoint } from 'react-use'
+const useBreakpoint = createBreakpoint({ Desktop: 800, Mobile: 0 })
 const JobDetail = ({
   JobData,
   Loading,
@@ -14,6 +16,7 @@ const JobDetail = ({
   }
   Loading: boolean
 }) => {
+  const breakpoint = useBreakpoint()
   return Loading ? (
     <div className="ContainerNoJobDataLoading">
       <div className="circle"></div>
@@ -25,6 +28,7 @@ const JobDetail = ({
     </div>
   ) : (
     <div className="ContainerJobDetail">
+      <h1>{breakpoint}</h1>
       {JobData.organizations[0] && (
         <div className="Image">
           <img src={JobData.organizations[0]?.picture} />
