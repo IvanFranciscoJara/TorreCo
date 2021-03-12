@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { ToogleLoadingAction } from '../Redux/GlobalStateDuck'
 
-const TORRE_BIO = 'https://torre.bio/api/'
-const TORRE_CO = 'https://torre.co/api/'
-const TORRE_SEARCH = 'https://search.torre.co/'
-
+// const TORRE_BIO = 'https://torre.bio/api/'
+// const TORRE_CO = 'https://torre.co/api/'
+// const TORRE_SEARCH = 'https://search.torre.co/'
+declare var __BACKEND_URL__: string
+const Api = __BACKEND_URL__
 function useFetchData(
-  endpoint: typeof TORRE_BIO | typeof TORRE_CO | typeof TORRE_SEARCH,
+  // endpoint: typeof TORRE_BIO | typeof TORRE_CO | typeof TORRE_SEARCH,
   route: string,
   requestData: () => any,
   method: string,
@@ -54,7 +55,7 @@ function useFetchData(
     init()
     setLoading(true)
     try {
-      const response = await fetch(`${endpoint}${route}`, {
+      const response = await fetch(`${Api}${route}`, {
         method,
         headers: {
           'Content-Type': 'application/json',

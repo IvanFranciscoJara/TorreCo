@@ -1,0 +1,85 @@
+@import  '../../GlobalFiles/GlobalVars.sass'
+.ContainerJobDetail
+    width: 50%
+    padding: 20px
+    border-left: 1px solid $gray-200
+    .Image
+        width: 100%
+        display: flex
+        align-items: flex-end
+        margin-bottom: 25px
+        // justify-content: center
+        img
+            border: 1px solid $gray-300
+            max-width: 50px
+            max-height: 50px
+        h5
+            margin-left: 15px
+            font-weight: bold
+            color: $gray-600
+            font-size: 20px
+    .Title
+        color: $gray-800
+        font-size: 24px
+        font-weight: bold
+    .Salary
+        margin-top: 10px
+        margin-bottom: 20px
+        div
+            display: inline-block
+            padding: 5px 10px
+            font-weight: bold
+            border-radius: 5px
+            background: $purple
+            color: $white
+    .Responsibilities
+        margin: 15px 0
+        &__Title
+            font-size: 18px
+            margin: 5px
+            font-weight: bold
+        &__Content
+            margin: 5px 10px
+            font-size: 14px
+            white-space: pre-line
+    .Strengths
+        margin: 5px 0
+        display: inline-block
+        &__Title
+            font-size: 18px
+            margin: 5px
+            font-weight: bold
+        &__item
+            display: inline-block
+            background: $gray-300
+            border-radius: 5px
+            margin: 5px
+            padding: 5px
+    .Team
+        margin: 5px 0
+        display: inline-block
+        &__Title
+            font-size: 18px
+            margin: 5px
+            font-weight: bold
+        &__item
+            display: inline-flex
+            background: $gray-300
+            border-radius: 5px
+            margin: 5px
+            padding: 5px
+            align-items: center
+            .left
+                padding: 5px
+                img
+                    border-radius: 50%
+                    width: 50px
+                    height: 50px
+            .right
+                padding: 5px
+                h5
+                    color: $gray-800
+                    font-weight: bold
+                h6
+                    font-weight: bold
+                    color: $gray-600

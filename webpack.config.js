@@ -33,10 +33,7 @@ module.exports = (env) => {
     plugins: [
       new webpack.DefinePlugin({
         __BACKEND_URL__: JSON.stringify(
-          env.TIPO === 'local' ? 'http://localhost:80/' : 'https://backendeducorp.herokuapp.com/',
-        ),
-        __FRONTEND_PUBLICO_URL__: JSON.stringify(
-          env.TIPO === 'local' ? 'http://localhost:9000/' : 'https://colegiosnewton.com/',
+          env.TIPO === 'local' ? 'http://localhost:9999/' : 'https://backendeducorp.herokuapp.com/',
         ),
       }),
       new HtmlWebPackPlugin({
