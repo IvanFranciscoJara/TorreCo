@@ -10,6 +10,7 @@ import { SaveCustomFilter, DeleteCustomFilter } from '../Redux/CustomFiltersDuck
 import { useHistory } from 'react-router-dom'
 import { produce } from 'immer'
 import CheckBox from '../Components/CheckBox'
+import Filter from '../Components/Filter'
 import './sass/Home.sass'
 import { IconEquis, IconDelete } from '../GlobalFiles/Icons'
 
@@ -17,7 +18,16 @@ const Home = () => {
   const dispatch = useDispatch()
   const StoreCustomFilters = useSelector((state: RootState) => state.customFilters)
   const [filtersOpen, setFiltersOpen] = useState(true)
-  const [filters, setFilters] = useState({
+
+  interface Props {
+    status: any[]
+    type: any[]
+    remote: any[]
+    compensationrange: any[]
+    skill: any[]
+  }
+
+  const [filters, setFilters] = useState<any>({
     status: [],
     type: [],
     remote: [],
@@ -29,17 +39,53 @@ const Home = () => {
   const [responseGet, invokeGet] = useFetch(
     'https://search.torre.co/',
     `opportunities/_search?currency=USD%24&page=${page}&periodicity=hourly&lang=en&size=10&aggregate=true&offset=0`,
-    {},
+    () => {
+      let data: any = {}
+
+      let checkedStatus = filters.status.filter((i: any) => i.checked)
+      let checkedType = filters.type.filter((i: any) => i.checked)
+      let checkedCompensarionRange = filters.compensationrange.filter((i: any) => i.checked)
+      let checkedSkill = filters.skill.filter((i: any) => i.checked)
+
+      if (checkedStatus.length > 0) {
+        data.status = { code: checkedStatus[0].value }
+      }
+
+      if (checkedType.length > 0) {
+        data.type = { code: checkedType[0].value }
+      }
+
+      if (checkedCompensarionRange.length > 0) {
+        let valor = checkedCompensarionRange[0].value
+        let last = valor.indexOf('/')
+        let minAmount = parseInt(valor.slice(5, last).split('-')[0])
+        let maxAmount = parseInt(valor.slice(5, last).split('-')[1])
+        data.compensationrange = { minAmount, maxAmount, currency: 'USD$', periodicity: 'hourly' }
+      }
+
+      if (checkedSkill.length > 0) {
+        data.skill = { term: checkedSkill[0].value, experience: 'potential-to-develop' }
+      }
+
+      data = [
+        { type: data.type },
+        { status: data.status },
+        { compensationrange: data.compensationrange },
+        { skill: data.skill },
+      ]
+      return { and: data }
+    },
     'POST',
     () => {
-      console.log(responseGet.data.aggregators.compensationrange)
-      setFilters({
-        status: responseGet.data.aggregators.status,
-        type: responseGet.data.aggregators.type,
-        remote: responseGet.data.aggregators.remote,
-        compensationrange: responseGet.data.aggregators.compensationrange,
-        skill: responseGet.data.aggregators.skill,
-      })
+      if (filters.status.length === 0) {
+        setFilters({
+          status: responseGet.data.aggregators.status,
+          type: responseGet.data.aggregators.type,
+          remote: responseGet.data.aggregators.remote,
+          compensationrange: responseGet.data.aggregators.compensationrange,
+          skill: responseGet.data.aggregators.skill,
+        })
+      }
     },
   )
 
@@ -78,14 +124,6 @@ const Home = () => {
     dispatch(SaveCustomFilter(customFilter))
   }
 
-  console.log(filters)
-  const a = {
-    and: [
-      { type: { code: 'full-time-employment' } },
-      { status: { code: 'open' } },
-      { compensationrange: { minAmount: 21, maxAmount: 40, currency: 'USD$', periodicity: 'hourly' } },
-    ],
-  }
   const setCustomFilter = (index: any) => {
     let newFilters = produce(filters, (drafFilters: any) => {
       drafFilters.status = drafFilters.status.map((item: any) => ({
@@ -137,68 +175,32 @@ const Home = () => {
             </div>
           )}
           <div className="MF__AllFilters">
-            <div className="filter">
-              <div className="Content">
-                <div className="filter_title">Status</div>
-                {filters.status.map((item: any, index: number) => (
-                  <div className="filter_item" onClick={() => handleChangeFilter('status', index, !item.checked)}>
-                    <div className="filter_item_checkbox">
-                      <CheckBox checked={!!item.checked} />
-                    </div>
-                    <div className="filter_item_text">{item.value}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="filter">
-              <div className="Content">
-                {' '}
-                <div className="filter_title">Job Type</div>
-                {filters.type.map((item: any, index: number) => (
-                  <div className="filter_item" onClick={() => handleChangeFilter('type', index, !item.checked)}>
-                    <div className="filter_item_checkbox">
-                      <CheckBox checked={!!item.checked} />
-                    </div>
-                    <div className="filter_item_text">{item.value}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="filter">
-              <div className="Content">
-                <div className="filter_title">Compensation</div>
-                {filters.compensationrange.map((item: any, index: number) => (
-                  <div
-                    className="filter_item"
-                    onClick={() => handleChangeFilter('compensationrange', index, !item.checked)}
-                  >
-                    <div className="filter_item_checkbox">
-                      <CheckBox checked={!!item.checked} />
-                    </div>
-                    <div className="filter_item_text">{item.value}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="filter">
-              <div className="Content">
-                <div className="filter_title">Skills</div>
-                {filters.skill.map((item: any, index: number) => (
-                  <div className="filter_item" onClick={() => handleChangeFilter('skill', index, !item.checked)}>
-                    <div className="filter_item_checkbox">
-                      <CheckBox checked={!!item.checked} />
-                    </div>
-                    <div className="filter_item_text">{item.value}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <Filter
+              title="Status"
+              filterType="status"
+              filters={filters.status}
+              handleChangeFilter={handleChangeFilter}
+            />
+            <Filter title="Job Type" filterType="type" filters={filters.type} handleChangeFilter={handleChangeFilter} />
+            <Filter
+              title="Compensation"
+              filterType="compensationrange"
+              filters={filters.compensationrange}
+              handleChangeFilter={handleChangeFilter}
+            />
+            <Filter title="Skills" filterType="skill" filters={filters.skill} handleChangeFilter={handleChangeFilter} />
           </div>
           <div className="MF__Footer">
             <button className="btn purple" onClick={() => saveCustomFilter()}>
               Save Custom Filter
             </button>
-            <button className="btn purple" onClick={() => setFiltersOpen(!filtersOpen)}>
+            <button
+              className="btn purple"
+              onClick={() => {
+                setFiltersOpen(!filtersOpen)
+                invokeGet()
+              }}
+            >
               Find Jobs
             </button>
           </div>
@@ -245,7 +247,11 @@ const Home = () => {
             </h5>
           )}
           <div className="abrirfiltros">
-            {haveChange && <button className="btn purple">Find Jobs</button>}
+            {haveChange && (
+              <button className="btn purple" onClick={() => invokeGet()}>
+                Find Jobs
+              </button>
+            )}
             <button className="btn purple" onClick={() => setFiltersOpen(!filtersOpen)}>
               Filters
             </button>

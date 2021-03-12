@@ -7,7 +7,7 @@ const TORRE_SEARCH = 'https://search.torre.co/'
 function useFetchData(
   endpoint: typeof TORRE_BIO | typeof TORRE_CO | typeof TORRE_SEARCH,
   route: string,
-  requestData: object,
+  requestData: () => any,
   method: string,
   afterFunction?: Function,
 ) {
@@ -40,7 +40,7 @@ function useFetchData(
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(requestData),
+        body: JSON.stringify(requestData()),
       })
       const info = await response.json()
       if (response.status === 500) {
