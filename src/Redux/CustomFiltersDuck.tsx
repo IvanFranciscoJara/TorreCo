@@ -2,7 +2,6 @@ import { saveStorage, getStorage } from './localStorageUtils'
 import { Action } from 'redux'
 import { ThunkAction, ThunkDispatch } from 'redux-thunk'
 import { RootState } from './store'
-import { createNoSubstitutionTemplateLiteral } from 'typescript'
 interface Props {
   name: string
   status: string[]

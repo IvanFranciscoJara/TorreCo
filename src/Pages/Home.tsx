@@ -1,35 +1,21 @@
-// import React from 'react'
-// import Button from '../Components/Button'
-import { useEffect, useState } from 'react'
-// import { useStore } from 'react-redux'
+import { useEffect, useState, Suspense, lazy } from 'react'
 import { RootState } from '../Redux/store'
 import useFetch from '../GlobalFiles/useFetch'
-import { differenceInDays } from 'date-fns'
 import { useSelector, useDispatch } from 'react-redux'
 import { SaveCustomFilter, DeleteCustomFilter } from '../Redux/CustomFiltersDuck'
-import { useHistory } from 'react-router-dom'
 import { produce } from 'immer'
-import CheckBox from '../Components/CheckBox'
 import Filter from '../Components/Filter'
 import Modal from '../Components/Modal'
 import './sass/Home.sass'
-import { IconEquis, IconDelete } from '../GlobalFiles/Icons'
-import JobDetail from './JobDetail'
+import { IconDelete } from '../GlobalFiles/Icons'
+const JobDetail = lazy(() => import('./JobDetail'))
+// import JobDetail from './JobDetail'
 import JobList from './JobList'
-import { classicNameResolver } from 'typescript'
-
 const Home = () => {
   const dispatch = useDispatch()
   const StoreCustomFilters = useSelector((state: RootState) => state.customFilters)
   const [filtersOpen, setFiltersOpen] = useState(false)
 
-  interface Props {
-    status: any[]
-    type: any[]
-    remote: any[]
-    compensationrange: any[]
-    skill: any[]
-  }
   const [searchText, setSearchText] = useState('')
   const [filters, setFilters] = useState<any>({
     status: [],
@@ -40,7 +26,6 @@ const Home = () => {
   })
   const [haveChange, setHaveChange] = useState(true)
   const [jobId, setJobId] = useState('')
-  const [page] = useState(0)
   const [responseGetJob, invokeGetJob] = useFetch(
     'Torre/JobDetail',
     () => {
@@ -129,7 +114,6 @@ const Home = () => {
 
   const Sum_status = filters.status.filter((item: { checked: boolean }) => item.checked).length
   const Sum_type = filters.type.filter((item: { checked: boolean }) => item.checked).length
-  //  const Sum_remote = filters.remote.filter((item: any) => item.checked).length
   const Sum_compensationrange = filters.compensationrange.filter((item: { checked: boolean }) => item.checked).length
   const Sum_skill = filters.skill.filter((item: { checked: boolean }) => item.checked).length
 
@@ -292,7 +276,9 @@ const Home = () => {
       </section>
       <section className="JobsSection">
         <JobList Data={responseGet.data} setJobId={setJobId} />
-        <JobDetail JobData={responseGetJob.data} Loading={responseGetJob.loading} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <JobDetail JobData={responseGetJob.data} Loading={responseGetJob.loading} />
+        </Suspense>
       </section>
     </div>
   )

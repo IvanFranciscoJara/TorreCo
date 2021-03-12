@@ -1,4 +1,4 @@
-import React from 'react'
+// import React from 'react'
 import { differenceInDays } from 'date-fns'
 import './sass/JobList.sass'
 const JobList = ({ Data, setJobId }: { Data: { results: [] }; setJobId: (jobId: string) => void }) => {

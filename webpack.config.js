@@ -54,10 +54,10 @@ module.exports = (env) => {
           },
         ],
       }),
-      // new InjectManifest({
-      //   swSrc: "./src-sw.js",
-      //   swDest: "sw.js",
-      // }),
+      new InjectManifest({
+        swSrc: './src-sw.js',
+        swDest: 'sw.js',
+      }),
     ],
     resolve: {
       extensions: ['.tsx', '.js', '.json'],

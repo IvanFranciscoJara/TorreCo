@@ -25,7 +25,7 @@
     "preserveConstEnums": true,
     "removeComments": true,
     "sourceMap": true,
-    "noUnusedLocals": false  
+    "noUnusedLocals": true  
     // "no-unused-variable": [true, {"ignore-pattern": "^_"}]
   },
   "include": [
