@@ -17,7 +17,7 @@ import { IconEquis, IconDelete } from '../GlobalFiles/Icons'
 const Home = () => {
   const dispatch = useDispatch()
   const StoreCustomFilters = useSelector((state: RootState) => state.customFilters)
-  const [filtersOpen, setFiltersOpen] = useState(true)
+  const [filtersOpen, setFiltersOpen] = useState(false)
 
   interface Props {
     status: any[]
