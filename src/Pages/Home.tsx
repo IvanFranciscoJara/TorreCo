@@ -54,10 +54,10 @@ const Home = () => {
     () => {
       let data: any = {}
 
-      let checkedStatus = filters.status.filter((i: any) => i.checked)
-      let checkedType = filters.type.filter((i: any) => i.checked)
-      let checkedCompensarionRange = filters.compensationrange.filter((i: any) => i.checked)
-      let checkedSkill = filters.skill.filter((i: any) => i.checked)
+      let checkedStatus = filters.status.filter((i: { checked: boolean }) => i.checked)
+      let checkedType = filters.type.filter((i: { checked: boolean }) => i.checked)
+      let checkedCompensarionRange = filters.compensationrange.filter((i: { checked: boolean }) => i.checked)
+      let checkedSkill = filters.skill.filter((i: { checked: boolean }) => i.checked)
 
       if (checkedStatus.length > 0) {
         data.status = { code: checkedStatus[0].value }
@@ -78,10 +78,10 @@ const Home = () => {
       if (checkedSkill.length > 0) {
         data.skill = { term: checkedSkill[0].value, experience: 'potential-to-develop' }
       }
-      let tempSkillRole: any
+
+      let tempSkillRole: { 'skill/role': { text: any; experience: any } }[] = []
       if (searchText !== '') {
-        tempSkillRole = searchText.split(' ')
-        tempSkillRole = tempSkillRole.map((item: string) => ({
+        tempSkillRole = searchText.split(' ').map((item: string) => ({
           'skill/role': { text: item, experience: 'potential-to-develop' },
         }))
       }
@@ -105,6 +105,7 @@ const Home = () => {
     true,
     true,
     () => {
+      console.log(...responseGet.data.aggregators)
       if (filters.status.length === 0) {
         setFilters({
           status: responseGet.data.aggregators.status,
@@ -123,13 +124,13 @@ const Home = () => {
     }
   }, [jobId])
 
-  const Sum_status = filters.status.filter((item: any) => item.checked).length
-  const Sum_type = filters.type.filter((item: any) => item.checked).length
+  const Sum_status = filters.status.filter((item: { checked: boolean }) => item.checked).length
+  const Sum_type = filters.type.filter((item: { checked: boolean }) => item.checked).length
   //  const Sum_remote = filters.remote.filter((item: any) => item.checked).length
-  const Sum_compensationrange = filters.compensationrange.filter((item: any) => item.checked).length
-  const Sum_skill = filters.skill.filter((item: any) => item.checked).length
+  const Sum_compensationrange = filters.compensationrange.filter((item: { checked: boolean }) => item.checked).length
+  const Sum_skill = filters.skill.filter((item: { checked: boolean }) => item.checked).length
 
-  const handleChangeFilter = (filter: any, index: any, value: any) => {
+  const handleChangeFilter = (filter: string, index: number, value: string) => {
     setHaveChange(true)
     let newFilters = produce(filters, (drafFilters: any) => {
       drafFilters[filter][index].checked = value
@@ -145,10 +146,10 @@ const Home = () => {
     let name: any = prompt('Please enter a filter name', 'Filter Name')
     const customFilter = {
       name: name?.toString(),
-      status: filters.status.filter((item: any) => item.checked),
-      type: filters.type.filter((item: any) => item.checked),
-      compensationrange: filters.compensationrange.filter((item: any) => item.checked),
-      skill: filters.skill.filter((item: any) => item.checked),
+      status: filters.status.filter((item: { checked: boolean }) => item.checked),
+      type: filters.type.filter((item: { checked: boolean }) => item.checked),
+      compensationrange: filters.compensationrange.filter((item: { checked: boolean }) => item.checked),
+      skill: filters.skill.filter((item: { checked: boolean }) => item.checked),
     }
     dispatch(SaveCustomFilter(customFilter))
   }
@@ -157,28 +158,22 @@ const Home = () => {
     let newFilters = produce(filters, (drafFilters: any) => {
       drafFilters.status = drafFilters.status.map((item: any) => ({
         ...item,
-        checked: StoreCustomFilters[index].status.map((i: any) => i.value).includes(item.value),
+        checked: StoreCustomFilters[index].status.map((i: { value: string }) => i.value).includes(item.value),
       }))
       drafFilters.type = drafFilters.type.map((item: any) => ({
         ...item,
-        checked: StoreCustomFilters[index].type.map((i: any) => i.value).includes(item.value),
+        checked: StoreCustomFilters[index].type.map((i: { value: string }) => i.value).includes(item.value),
       }))
       drafFilters.compensationrange = drafFilters.compensationrange.map((item: any) => ({
         ...item,
         checked: StoreCustomFilters[index].compensationrange.map((i: any) => i.value).includes(item.value),
       }))
-      drafFilters.skill = drafFilters.skill.map((item: any) => ({
+      drafFilters.skill = drafFilters.skill.map((item: { value: string }) => ({
         ...item,
-        checked: StoreCustomFilters[index].skill.map((i: any) => i.value).includes(item.value),
+        checked: StoreCustomFilters[index].skill.map((i: { value: string }) => i.value).includes(item.value),
       }))
     })
     setFilters(newFilters)
-  }
-  const a = {
-    and: [
-      { 'skill/role': { text: 'react', experience: 'potential-to-develop' } },
-      { 'skill/role': { text: 'angular', experience: 'potential-to-develop' } },
-    ],
   }
   return (
     <div className="ContainerJobSearch">
@@ -193,7 +188,7 @@ const Home = () => {
           {StoreCustomFilters.length > 0 && (
             <div className="MF__CustomFilters">
               <div className="title">Custom Filters: </div>
-              {StoreCustomFilters.map((customfilter: any, index: any) => (
+              {StoreCustomFilters.map((customfilter: { name: string }, index: number) => (
                 <div key={index} className="item">
                   <div className="item_text" onClick={() => setCustomFilter(index)}>
                     {customfilter.name}
