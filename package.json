@@ -5,6 +5,7 @@
   "scripts": {
     "build": "npx webpack --env.TIPO=production --progress --colors",
     "dev": "npx webpack-dev-server --env.TIPO=local  --progress --colors",
+    "dev_backend": "npx webpack-dev-server --env.TIPO=production  --progress --colors",
     "test": "jest -c jest.config.js --watch"
   },
   "keywords": [],

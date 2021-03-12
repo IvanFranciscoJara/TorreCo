@@ -1,6 +1,19 @@
 import React from 'react'
 import './sass/JobDetail.sass'
-const JobDetail = ({ JobData, Loading }: any) => {
+const JobDetail = ({
+  JobData,
+  Loading,
+}: {
+  JobData: {
+    organizations: [{ picture: string; name: string }]
+    objective: string
+    compensation: { currency: string; minAmount: string; maxAmount: string; periodicity: string }
+    details: [{ content: string }]
+    strengths: []
+    members: []
+  }
+  Loading: boolean
+}) => {
   return Loading ? (
     <div className="ContainerNoJobDataLoading">
       <div className="circle"></div>
@@ -28,25 +41,25 @@ const JobDetail = ({ JobData, Loading }: any) => {
       <div className="Responsibilities">
         <h5 className="Responsibilities__Title">Requirements</h5>
         <h5 className="Responsibilities__Content">
-          {JobData.details.find((it: any) => it.code === 'requirements').content}
+          {JobData.details.find((it: any): boolean => it.code === 'requirements')?.content}
         </h5>
       </div>
       <div className="Responsibilities">
         <h5 className="Responsibilities__Title">Responsibilities</h5>
         <h5 className="Responsibilities__Content">
-          {JobData.details.find((it: any) => it.code === 'responsibilities').content}
+          {JobData.details.find((it: any): boolean => it.code === 'responsibilities')?.content}
         </h5>
       </div>
 
       <div className="Strengths">
         <h5 className="Strengths__Title">Skills</h5>
-        {JobData.strengths.map((item: any) => (
+        {JobData.strengths.map((item: { name: string }) => (
           <div className="Strengths__item">{item.name}</div>
         ))}
       </div>
       <div className="Team">
         <h5 className="Team__Title">Team</h5>
-        {JobData.members.map((item: any) => (
+        {JobData.members.map((item: { person: { picture: string; name: string; professionalHeadline: string } }) => (
           <div className="Team__item">
             <div className="left">
               <img src={item.person.picture} />
