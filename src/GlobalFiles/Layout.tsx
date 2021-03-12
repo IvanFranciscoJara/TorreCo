@@ -43,10 +43,9 @@ const Layout: React.FC<Props> = ({ children }) => {
     <div className="ContainerLayout">
       <div className="Layout__TopNavBar">
         <div className="left" onClick={() => dispatch(ToogleNavbarAction(true))}>
-          <div className="left__menu">
-            <IconMenu />
-          </div>
-          <img src="../images/LogoRimac.png" />
+          <img src="../Images/LogoTorreCo.svg" />
+          <button className="btn purple">Jobs/Gigs</button>
+          <button className="btn purple">People</button>
         </div>
         <div className="right RF_Title_8 bold">MI CUENTA</div>
       </div>

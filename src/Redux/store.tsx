@@ -11,7 +11,7 @@ export type RootState = ReturnType<typeof rootReducer>
 
 export default function generateStore() {
   let store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)))
-  console.log('iniciando REDUX') // Esto ocurre cuando inicia Redux
+  console.log('iniciando REDUX') // This occurs when Redux start
   restoreStorageCustomFilters()(store.dispatch)
   // restoreStorageActionTempValues()(store.dispatch)
   return store

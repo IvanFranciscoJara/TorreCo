@@ -115,14 +115,18 @@
                     display: flex
                     justify-content: flex-end
     .Filters
-        padding: 15px
-        margin-bottom: 10px
+        padding: 5px 15px
+        border-bottom: 1px solid $gray-300
         &__Text
             margin-bottom: 10px
-            width: 50%
+            width: 100%
             input
                 width: 100%
                 padding: 8px 15px
+                border-radius: 0px
+                border: none
+                border-bottom: 1px solid $purple
+                font-size: 18px
         &__Summary
             display: flex
             align-items: center
@@ -168,31 +172,156 @@
                 padding: 1px 2px 1px 30px
                 background: rgb(0,236,255)
                 background: linear-gradient(90deg, rgba(0,236,255,0) 0%, rgba(255,255,255,1) 23%, rgba(255,255,255,1) 100%)
-    .Jobs
-        .Job
-            border-bottom: 1px solid $gray-500
-            padding: 10px
-            &__Title
-                color: $gray-800
+    .JobsSection
+        display: flex
+        border-left: 1px solid $gray-300
+        .Jobs
+            padding: 20px 0
+            width: 50%
+            .Job
+                border-bottom: 1px solid $gray-500
+                padding: 10px 20px
+                &:hover
+                    background: $gray-200
+                    cursor: pointer
+                &__Title
+                    color: $gray-800
+                    display: flex
+                    justify-content: space-between
+                    align-items: flex-start
+                    h3
+                        width: 70%
+                    span
+                        background-color: $purple
+                        border-radius: 5px
+                        padding: 3px 10px
+                        margin-left: 10px
+                        font-size: 14px
+                        color: $white
+                &__Type
+                    color: $gray-700
+                    margin-bottom: 10px
+                &__Footer
+                    display: flex
+                    justify-content: space-between
+                    align-items: flex-end
+                    &__Days
+                        font-size: 13px
+                    &__Apply
+        .JobDetails
+            width: 50%
+            padding: 20px
+            border-left: 1px solid $gray-200
+            .Image
+                width: 100%
                 display: flex
-                justify-content: space-between
-                align-items: flex-start
-                h3
-                    width: 70%
-                span
-                    background-color: $purple
-                    border-radius: 5px
-                    padding: 3px 10px
-                    margin-left: 10px
-                    font-size: 14px
-                    color: $white
-            &__Type
-                color: $gray-700
-                margin-bottom: 10px
-            &__Footer
-                display: flex
-                justify-content: space-between
                 align-items: flex-end
-                &__Days
-                    font-size: 13px
-                &__Apply
+                margin-bottom: 25px
+                // justify-content: center
+                img
+                    border: 1px solid $gray-300
+                    max-width: 50px
+                    max-height: 50px
+                h5
+                    margin-left: 15px
+                    font-weight: bold
+                    color: $gray-600
+                    font-size: 20px
+            .Title
+                color: $gray-800
+                font-size: 24px
+                font-weight: bold
+            .Salary
+                margin-top: 10px
+                margin-bottom: 20px
+                div
+                    display: inline-block
+                    padding: 5px 10px
+                    font-weight: bold
+                    border-radius: 5px
+                    background: $purple
+                    color: $white
+            .Responsibilities
+                margin: 15px 0
+                &__Title
+                    font-size: 18px
+                    margin: 5px
+                    font-weight: bold
+                &__Content
+                    margin: 5px 10px
+                    font-size: 14px
+                    white-space: pre-line
+            .Strengths
+                margin: 5px 0
+                display: inline-block
+                &__Title
+                    font-size: 18px
+                    margin: 5px
+                    font-weight: bold
+                &__item
+                    display: inline-block
+                    background: $gray-300
+                    border-radius: 5px
+                    margin: 5px
+                    padding: 5px
+            .Team
+                margin: 5px 0
+                display: inline-block
+                &__Title
+                    font-size: 18px
+                    margin: 5px
+                    font-weight: bold
+                &__item
+                    display: inline-flex
+                    background: $gray-300
+                    border-radius: 5px
+                    margin: 5px
+                    padding: 5px
+                    align-items: center
+                    .left
+                        padding: 5px
+                        img
+                            border-radius: 50%
+                            width: 50px
+                            height: 50px
+                    .right
+                        padding: 5px
+                        h5
+                            color: $gray-800
+                            font-weight: bold
+                        h6
+                            font-weight: bold
+                            color: $gray-600
+        .NoJobData
+            width: 50%
+            border-left: 1px solid $gray-300
+            text-align: center
+            padding-top: 50px
+            img
+                margin-top: 20px
+                max-width: 150px
+                max-height: 150px
+        .NoJobDataLoading
+            height: 200px
+            width: 50%
+            background-color: $white
+            position: relative
+            display: flex
+            justify-content: center
+            padding-top: 50px
+            .circle
+                width: 5em
+                height: 5em
+                border-radius: 50%
+                text-indent: -9999em
+                border-top: 0.5em solid $gray-200
+                border-right: 0.5em solid $gray-200
+                border-bottom: 0.5em solid $gray-200
+                border-left: 0.5em solid $purple
+                animation: load8 1.1s infinite linear
+            @keyframes load8
+                0%
+                    transform: rotate(0deg)
+
+                100%
+                    transform: rotate(360deg)

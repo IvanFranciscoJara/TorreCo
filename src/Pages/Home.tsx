@@ -26,7 +26,7 @@ const Home = () => {
     compensationrange: any[]
     skill: any[]
   }
-
+  const [searchText, setSearchText] = useState('')
   const [filters, setFilters] = useState<any>({
     status: [],
     type: [],
@@ -35,7 +35,20 @@ const Home = () => {
     skill: [],
   })
   const [haveChange, setHaveChange] = useState(false)
+  const [jobId, setJobId] = useState('')
   const [page] = useState(0)
+  const [responseGetJob, invokeGetJob] = useFetch(
+    'https://torre.co/api/',
+    `opportunities/${jobId}`,
+    () => {},
+    'GET',
+    false,
+    false,
+    () => {
+      console.log(responseGetJob.data)
+    },
+  )
+
   const [responseGet, invokeGet] = useFetch(
     'https://search.torre.co/',
     `opportunities/_search?currency=USD%24&page=${page}&periodicity=hourly&lang=en&size=10&aggregate=true&offset=0`,
@@ -66,17 +79,40 @@ const Home = () => {
       if (checkedSkill.length > 0) {
         data.skill = { term: checkedSkill[0].value, experience: 'potential-to-develop' }
       }
-
+      // console.log(searchText)
+      let tempSkillRole: any
+      if (searchText !== '') {
+        // console.log(searchText)
+        tempSkillRole = searchText.split(' ')
+        // console.log(tempSkillRole)
+        tempSkillRole = tempSkillRole.map((item: string) => ({
+          'skill/role': { text: item, experience: 'potential-to-develop' },
+        }))
+        // console.log(tempSkillRole)
+      }
+      console.log(tempSkillRole)
       data = [
         { type: data.type },
         { status: data.status },
         { compensationrange: data.compensationrange },
         { skill: data.skill },
       ]
+      console.log(searchText)
+      if (searchText !== '') {
+        data = data.concat(tempSkillRole)
+      }
+
+      // and: [
+      //   { 'skill/role': { text: 'angular', experience: 'potential-to-develop' } },
+      // ],
+      console.log(data)
       return { and: data }
     },
     'POST',
+    true,
+    true,
     () => {
+      console.log(responseGet.data.results)
       if (filters.status.length === 0) {
         setFilters({
           status: responseGet.data.aggregators.status,
@@ -89,15 +125,15 @@ const Home = () => {
     },
   )
 
+  useEffect(() => {
+    invokeGetJob()
+  }, [jobId])
+
   const Sum_status = filters.status.filter((item: any) => item.checked).length
   const Sum_type = filters.type.filter((item: any) => item.checked).length
   //  const Sum_remote = filters.remote.filter((item: any) => item.checked).length
   const Sum_compensationrange = filters.compensationrange.filter((item: any) => item.checked).length
   const Sum_skill = filters.skill.filter((item: any) => item.checked).length
-
-  useEffect(() => {
-    invokeGet()
-  }, [])
 
   const handleChangeFilter = (filter: any, index: any, value: any) => {
     setHaveChange(true)
@@ -145,6 +181,14 @@ const Home = () => {
     })
     setFilters(newFilters)
   }
+  const a = {
+    and: [
+      { 'skill/role': { text: 'react', experience: 'potential-to-develop' } },
+      { 'skill/role': { text: 'angular', experience: 'potential-to-develop' } },
+    ],
+  }
+  let JobData = responseGetJob.data
+  console.log(JobData)
   return (
     <div className="ContainerJobSearch">
       <div className={`ModalFilters ${filtersOpen ? 'show' : 'hide'}`}>
@@ -159,7 +203,7 @@ const Home = () => {
             <div className="MF__CustomFilters">
               <div className="title">Custom Filters: </div>
               {StoreCustomFilters.map((customfilter: any, index: any) => (
-                <div className="item">
+                <div key={index} className="item">
                   <div className="item_text" onClick={() => setCustomFilter(index)}>
                     {customfilter.name}
                   </div>
@@ -206,12 +250,14 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="Filters">
-        {/* <div className='Left'>
-
-        </div> */}
+      <section className="Filters">
         <div className="Filters__Text">
-          <input type="text" placeholder="Keywords" />
+          <input
+            type="text"
+            placeholder="Keywords"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
         </div>
         <div className="Filters__Summary">
           <h4 className="title">Filters: </h4>
@@ -257,55 +303,98 @@ const Home = () => {
             </button>
           </div>
         </div>
-      </div>
-      <div className="Jobs">
-        {responseGet.data?.results &&
-          responseGet.data.results.map((job: any) => {
-            let Dias = differenceInDays(new Date(job.deadline), new Date())
-            return (
-              <div className="Job" key={job.id}>
-                <div className="Job__Title">
-                  <h3>{job.objective}</h3>
-                  {job.remote && <span className="Job__Remote">🌎 Remote</span>}
-                </div>
-                <h4 className="Job__Type">{job.type}</h4>
+      </section>
+      <section className="JobsSection">
+        <div className="Jobs">
+          {responseGet.data?.results &&
+            responseGet.data.results.map((job: any) => {
+              let Dias = differenceInDays(new Date(job.deadline), new Date())
+              return (
+                <div className="Job" key={job.id} onClick={() => setJobId(job.id)}>
+                  <div className="Job__Title">
+                    <h3>{job.objective}</h3>
+                    {job.remote && <span className="Job__Remote">🌎 Remote</span>}
+                  </div>
+                  <h4 className="Job__Type">{job.type}</h4>
 
-                {job.compensation.visible && (
-                  <div className="Job__Compensation">
-                    {job.compensation.data.currency} {job.compensation.data.minAmount}-{job.compensation.data.maxAmount}
-                    /{job.compensation.data.periodicity}
-                  </div>
-                )}
-                <div className="Job__Footer">
-                  <div className="Job__Footer__Days">{Dias > 0 && <h3>Cierra en {Dias} días</h3>}</div>
-                  <div className="Job__Footer__Apply">
-                    {/* <button className="btn blue">Apply for the Job</button> */}
+                  {job.compensation?.visible && (
+                    <div className="Job__Compensation">
+                      {job.compensation.data.currency} {job.compensation.data.minAmount}-
+                      {job.compensation.data.maxAmount}/{job.compensation.data.periodicity}
+                    </div>
+                  )}
+                  <div className="Job__Footer">
+                    <div className="Job__Footer__Days">{Dias > 0 && <h3>Cierra en {Dias} días</h3>}</div>
+                    <div className="Job__Footer__Apply">
+                      {/* <button className="btn blue">Apply for the Job</button> */}
+                    </div>
                   </div>
                 </div>
+              )
+            })}
+        </div>
+        {responseGetJob.loading ? (
+          <div className="NoJobDataLoading">
+            <div className="circle"></div>
+          </div>
+        ) : !JobData ? (
+          <div className="NoJobData">
+            <h1>Select a job from the left list to see details</h1>
+            <img src="/Images/job-search.svg" />
+          </div>
+        ) : (
+          <div className="JobDetails">
+            {JobData.organizations[0] && (
+              <div className="Image">
+                <img src={JobData.organizations[0]?.picture} />
+                <h5>{JobData.organizations[0]?.name}</h5>
               </div>
-            )
-          })}
-      </div>
-      <div className="Pagination"></div>
+            )}
+            <div className="Title">{JobData.objective}</div>
+            <div className="Salary">
+              <div>
+                {JobData.compensation.currency}
+                {JobData.compensation.minAmount} - {JobData.compensation.maxAmount}/ {JobData.compensation.periodicity}
+              </div>
+            </div>
+            <div className="Responsibilities">
+              <h5 className="Responsibilities__Title">Requirements</h5>
+              <h5 className="Responsibilities__Content">
+                {JobData.details.find((it: any) => it.code === 'requirements').content}
+              </h5>
+            </div>
+            <div className="Responsibilities">
+              <h5 className="Responsibilities__Title">Responsibilities</h5>
+              <h5 className="Responsibilities__Content">
+                {JobData.details.find((it: any) => it.code === 'responsibilities').content}
+              </h5>
+            </div>
+
+            <div className="Strengths">
+              <h5 className="Strengths__Title">Skills</h5>
+              {JobData.strengths.map((item: any) => (
+                <div className="Strengths__item">{item.name}</div>
+              ))}
+            </div>
+            <div className="Team">
+              <h5 className="Team__Title">Team</h5>
+              {JobData.members.map((item: any) => (
+                <div className="Team__item">
+                  <div className="left">
+                    <img src={item.person.picture} />
+                  </div>
+                  <div className="right">
+                    <h5>{item.person.name}</h5>
+                    <h6>{item.person.professionalHeadline}</h6>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="Skills"></div>
+          </div>
+        )}
+      </section>
     </div>
-    // <ResponsiveForm onSubmit={HandleSubmit}>
-    //   <div className="ContainerHome">
-    //     <div className="Logo">
-    //       <div className="Logo__image">
-    //         <IconQuizApp />
-    //       </div>
-    //       <h1>QuizApp</h1>
-    //     </div>
-    //     <div className="welcome">
-    //       <h2>Welcome</h2>
-    //       <p>You will be presented with 10 True or False questions</p>
-    //       <p className="question">Can you score 100%?</p>
-    //     </div>
-    //     <div className="button">
-    //       <Button text="Begin" onClick={responseGet} loading={response.loading} />
-    //     </div>
-    //   </div>
-    // </ResponsiveForm>
   )
 }
 export default Home
