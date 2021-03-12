@@ -14,6 +14,7 @@ import Filter from '../Components/Filter'
 import './sass/Home.sass'
 import { IconEquis, IconDelete } from '../GlobalFiles/Icons'
 import JobDetail from './JobDetail'
+import JobList from './JobList'
 const Home = () => {
   const dispatch = useDispatch()
   const StoreCustomFilters = useSelector((state: RootState) => state.customFilters)
@@ -77,30 +78,23 @@ const Home = () => {
       if (checkedSkill.length > 0) {
         data.skill = { term: checkedSkill[0].value, experience: 'potential-to-develop' }
       }
-      // console.log(searchText)
       let tempSkillRole: any
       if (searchText !== '') {
-        // console.log(searchText)
         tempSkillRole = searchText.split(' ')
-        // console.log(tempSkillRole)
         tempSkillRole = tempSkillRole.map((item: string) => ({
           'skill/role': { text: item, experience: 'potential-to-develop' },
         }))
-        // console.log(tempSkillRole)
       }
-      console.log(tempSkillRole)
       data = [
         { type: data.type },
         { status: data.status },
         { compensationrange: data.compensationrange },
         { skill: data.skill },
       ]
-      console.log(searchText)
       if (searchText !== '') {
         data = data.concat(tempSkillRole)
       }
 
-      console.log(data)
       return {
         endPoint:
           'opportunities/_search?currency=USD%24&page=${page}&periodicity=hourly&lang=en&size=10&aggregate=true&offset=0',
@@ -111,7 +105,6 @@ const Home = () => {
     true,
     true,
     () => {
-      console.log(responseGet.data.results)
       if (filters.status.length === 0) {
         setFilters({
           status: responseGet.data.aggregators.status,
@@ -157,7 +150,6 @@ const Home = () => {
       compensationrange: filters.compensationrange.filter((item: any) => item.checked),
       skill: filters.skill.filter((item: any) => item.checked),
     }
-    console.log(customFilter)
     dispatch(SaveCustomFilter(customFilter))
   }
 
@@ -304,46 +296,8 @@ const Home = () => {
         </div>
       </section>
       <section className="JobsSection">
-        <div className="Jobs">
-          {responseGet.data?.results &&
-            responseGet.data.results.map((job: any) => {
-              let Dias = differenceInDays(new Date(job.deadline), new Date())
-              return (
-                <div className="Job" key={job.id} onClick={() => setJobId(job.id)}>
-                  <div className="Job__Title">
-                    <h3>{job.objective}</h3>
-                    {job.remote && <span className="Job__Remote">🌎 Remote</span>}
-                  </div>
-                  <h4 className="Job__Type">{job.type}</h4>
-
-                  {job.compensation?.visible && (
-                    <div className="Job__Compensation">
-                      {job.compensation.data.currency} {job.compensation.data.minAmount}-
-                      {job.compensation.data.maxAmount}/{job.compensation.data.periodicity}
-                    </div>
-                  )}
-                  <div className="Job__Footer">
-                    <div className="Job__Footer__Days">{Dias > 0 && <h3>Cierra en {Dias} días</h3>}</div>
-                    <div className="Job__Footer__Apply">
-                      {/* <button className="btn blue">Apply for the Job</button> */}
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-        </div>
-        {responseGetJob.loading ? (
-          <div className="NoJobDataLoading">
-            <div className="circle"></div>
-          </div>
-        ) : !responseGetJob.data ? (
-          <div className="NoJobData">
-            <h1>Select a job from the left list to see details</h1>
-            <img src="/Images/job-search.svg" />
-          </div>
-        ) : (
-          <JobDetail JobData={responseGetJob.data} />
-        )}
+        <JobList Data={responseGet.data} setJobId={setJobId} />
+        <JobDetail JobData={responseGetJob.data} Loading={responseGetJob.loading} />
       </section>
     </div>
   )

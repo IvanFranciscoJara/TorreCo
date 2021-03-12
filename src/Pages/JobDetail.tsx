@@ -1,7 +1,16 @@
 import React from 'react'
 import './sass/JobDetail.sass'
-const JobDetail = ({ JobData }: any) => {
-  return (
+const JobDetail = ({ JobData, Loading }: any) => {
+  return Loading ? (
+    <div className="ContainerNoJobDataLoading">
+      <div className="circle"></div>
+    </div>
+  ) : !JobData ? (
+    <div className="ContainerNoJobData">
+      <h1>Select a job from the left list to see details</h1>
+      <img src="/Images/job-search.svg" />
+    </div>
+  ) : (
     <div className="ContainerJobDetail">
       {JobData.organizations[0] && (
         <div className="Image">

@@ -83,3 +83,36 @@
                 h6
                     font-weight: bold
                     color: $gray-600
+.ContainerNoJobData
+    width: 50%
+    border-left: 1px solid $gray-300
+    text-align: center
+    padding-top: 50px
+    img
+        margin-top: 20px
+        max-width: 150px
+        max-height: 150px
+.ContainerNoJobDataLoading
+    height: 200px
+    width: 50%
+    background-color: $white
+    position: relative
+    display: flex
+    justify-content: center
+    padding-top: 50px
+    .circle
+        width: 5em
+        height: 5em
+        border-radius: 50%
+        text-indent: -9999em
+        border-top: 0.5em solid $gray-200
+        border-right: 0.5em solid $gray-200
+        border-bottom: 0.5em solid $gray-200
+        border-left: 0.5em solid $purple
+        animation: load8 1.1s infinite linear
+    @keyframes load8
+        0%
+            transform: rotate(0deg)
+
+        100%
+            transform: rotate(360deg)

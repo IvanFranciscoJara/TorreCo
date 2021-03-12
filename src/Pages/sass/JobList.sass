@@ -1,0 +1,34 @@
+@import  '../../GlobalFiles/GlobalVars.sass'
+.ContainerJobList
+    padding: 20px 0
+    width: 50%
+    .Job
+        border-bottom: 1px solid $gray-500
+        padding: 10px 20px
+        &:hover
+            background: $gray-200
+            cursor: pointer
+        &__Title
+            color: $gray-800
+            display: flex
+            justify-content: space-between
+            align-items: flex-start
+            h3
+                width: 70%
+            span
+                background-color: $purple
+                border-radius: 5px
+                padding: 3px 10px
+                margin-left: 10px
+                font-size: 14px
+                color: $white
+        &__Type
+            color: $gray-700
+            margin-bottom: 10px
+        &__Footer
+            display: flex
+            justify-content: space-between
+            align-items: flex-end
+            &__Days
+                font-size: 13px
+            &__Apply
